@@ -26,7 +26,7 @@
     try {
       var j = sub.toJSON();
       if (!j || !j.keys) return;
-      await window.supabaseClient.from('push_subscriptions').upsert({
+      await supabaseClient.from('push_subscriptions').upsert({
         endpoint: j.endpoint,
         p256dh: j.keys.p256dh,
         auth: j.keys.auth
@@ -35,7 +35,7 @@
   }
 
   async function removeSubscription(endpoint) {
-    try { await window.supabaseClient.from('push_subscriptions').delete().eq('endpoint', endpoint); } catch (e) {}
+    try { await supabaseClient.from('push_subscriptions').delete().eq('endpoint', endpoint); } catch (e) {}
   }
 
   // تفعيل الإشعارات (يُستدعى من زر القائمة)
