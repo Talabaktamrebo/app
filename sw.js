@@ -1,4 +1,4 @@
-const CACHE_NAME = 'talbaktem-v100';
+const CACHE_NAME = 'talbaktem-v101';
 const STATIC_ASSETS = [
   './',
   '/index.html',
@@ -87,11 +87,16 @@ self.addEventListener('push', event => {
     renotify: true,
     data: { url: data.url || '/' }
   };
-  event.waitUntil(self.registration.showNotification(title, options));
+  event.waitUntil(Promise.all([
+    self.registration.showNotification(title, options),
+    // نقطة حمراء على أيقونة التطبيق (حيثما يُدعم)
+    (self.navigator && self.navigator.setAppBadge) ? self.navigator.setAppBadge().catch(() => {}) : Promise.resolve()
+  ]));
 });
 
 self.addEventListener('notificationclick', event => {
   event.notification.close();
+  if (self.navigator && self.navigator.clearAppBadge) { try { self.navigator.clearAppBadge(); } catch (e) {} }
   const target = (event.notification.data && event.notification.data.url) || '/';
   event.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
