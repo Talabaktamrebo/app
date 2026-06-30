@@ -38,13 +38,24 @@
     try { await supabaseClient.from('push_subscriptions').delete().eq('endpoint', endpoint); } catch (e) {}
   }
 
+  function isIOS() { return /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); }
+  function isStandalone() { return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true; }
+
   // تفعيل الإشعارات (يُستدعى من زر القائمة)
   async function enablePush() {
-    if (!supported()) { (window.uiAlert || window.alert)('متصفّحك لا يدعم الإشعارات. على آيفون: ثبّت التطبيق على الشاشة الرئيسية أولاً.', { type: 'info', title: 'غير مدعوم' }); return false; }
-    if (!VAPID_PUBLIC_KEY || VAPID_PUBLIC_KEY.indexOf('ضع_') === 0) { console.warn('[push] VAPID_PUBLIC_KEY غير مضبوط'); (window.uiAlert || window.alert)('الإشعارات غير مهيّأة بعد. (مفتاح VAPID غير مضبوط)', { type: 'error', title: 'تنبيه' }); return false; }
+    if (!supported()) {
+      var msg = isIOS()
+        ? 'إشعارات آيفون تتطلّب: نظام iOS 16.4 أو أحدث، وأن يكون التطبيق مُضافاً للشاشة الرئيسية ومفتوحاً منها.'
+        : 'متصفّحك لا يدعم الإشعارات.';
+      (window.uiAlert || window.alert)(msg, { type: 'info', title: 'غير مدعوم' }); return false;
+    }
+    if (isIOS() && !isStandalone()) {
+      (window.uiAlert || window.alert)('على آيفون: أضِف التطبيق إلى الشاشة الرئيسية (زر المشاركة → إضافة إلى الشاشة الرئيسية) ثم افتحه من الأيقونة وفعّل الإشعارات.', { type: 'info', title: 'ثبّت التطبيق أولاً' }); return false;
+    }
+    if (!VAPID_PUBLIC_KEY || VAPID_PUBLIC_KEY.indexOf('ضع_') === 0) { (window.uiAlert || window.alert)('الإشعارات غير مهيّأة بعد.', { type: 'error', title: 'تنبيه' }); return false; }
     try {
       var perm = await Notification.requestPermission();
-      if (perm !== 'granted') { (window.uiToast || function(){}) ('لم يتم تفعيل الإشعارات', 'info'); updateBtn(); return false; }
+      if (perm !== 'granted') { (window.uiToast || function(){}) ('لم يتم منح إذن الإشعارات', 'info'); updateBtn(); return false; }
       var reg = await navigator.serviceWorker.ready;
       var sub = await reg.pushManager.getSubscription();
       if (!sub) {
@@ -60,7 +71,8 @@
       return true;
     } catch (e) {
       console.error('[push] enable failed', e);
-      (window.uiAlert || window.alert)('تعذّر تفعيل الإشعارات حالياً. حاول مرّة أخرى.', { type: 'error', title: 'تنبيه' });
+      // مؤقّتاً: نُظهر الخطأ الفعلي للتشخيص
+      (window.uiAlert || window.alert)('تعذّر التفعيل: ' + ((e && (e.name + ' — ' + e.message)) || String(e)), { type: 'error', title: 'تفاصيل الخطأ' });
       return false;
     }
   }
