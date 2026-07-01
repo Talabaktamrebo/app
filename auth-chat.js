@@ -263,7 +263,6 @@
     + '<div class="ac-card" style="position:relative">'
     + '  <button class="ac-close" onclick="window._acCloseAuth()" aria-label="إغلاق">' + X_SVG + '</button>'
     + '  <h3 id="acTitle">تسجيل الدخول</h3>'
-    + '  <p class="sub" id="acSub">سجّل دخولك لتتواصل مع الإدارة عبر الدردشة</p>'
     + '  <div class="ac-msg" id="acMsg"></div>'
     + '  <div id="acStep1" style="display:none">'
     + '    <div class="ac-field"><label>الاسم</label><input id="acName" type="text" placeholder="اسمك الأول"></div>'
