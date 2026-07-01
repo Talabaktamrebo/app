@@ -39,7 +39,12 @@ function mapRow(d) {
     auctionStart: (d.auction_start == null ? null : Number(d.auction_start)),
     auctionIncrement: (d.auction_increment == null ? 1 : Number(d.auction_increment)),
     auctionEnds: d.auction_ends_at || null,
-    auctionStatus: d.auction_status || 'live'
+    auctionStatus: d.auction_status || 'live',
+    aptFloor: d.apt_floor, aptFurnished: d.apt_furnished, aptHeating: d.apt_heating, aptSolar: d.apt_solar, aptElevator: d.apt_elevator, aptGarage: d.apt_garage, aptView: d.apt_view, aptAge: d.apt_age, aptWaterTank: d.apt_water_tank, aptInternet: d.apt_internet,
+    carGear: d.car_gear, carFuel: d.car_fuel, carEngine: d.car_engine, carDrive: d.car_drive, carCondition: d.car_condition, carCustoms: d.car_customs, carSunroof: d.car_sunroof, carCamera: d.car_camera, carScreen: d.car_screen, carDoors: d.car_doors,
+    landOwnership: d.land_ownership, landElectricity: d.land_electricity, landWater: d.land_water, landSewage: d.land_sewage, landRoad: d.land_road, landFenced: d.land_fenced, landPermit: d.land_permit, landStreet: d.land_street,
+    equipType: d.equip_type, equipBrand: d.equip_brand, equipYear: d.equip_year, equipHours: d.equip_hours, equipCondition: d.equip_condition, equipFuel: d.equip_fuel, equipPower: d.equip_power, equipOperator: d.equip_operator,
+    shopFit: d.shop_fit, shopStorage: d.shop_storage, shopBathroom: d.shop_bathroom, shopPower3: d.shop_power3, shopAc: d.shop_ac, shopEntrance: d.shop_entrance, shopGlass: d.shop_glass, shopParking: d.shop_parking
   };
 }
 
@@ -1185,7 +1190,12 @@ function filterListings(keepPage){
       <div class="free-ad-cta-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></div>
     </a>`;
   }else if(sType==='partner'){
-    freeCtaEl.innerHTML=`<a class="free-ad-cta" style="margin:0 0 16px;background:linear-gradient(135deg,#F6921E,#E07D0A)" onclick="openPartnerModal()">
+    freeCtaEl.innerHTML=`<div class="partner-intro">
+      <h3>🤝 أول منصّة شراكة في سوريا</h3>
+      <p>عندك <b>فكرة مشروع</b> ناجحة وينقصها التمويل؟ عندك <b>أرض أو رأس مال</b> وتبحث عمّن يُديره ويستثمره معك؟ قسم «ابحث عن شريك» يجمع أصحاب الأفكار ورؤوس الأموال والأصول في مكان واحد — لتلتقي الفرص بالشركاء المناسبين. حوّل فكرتك إلى واقع، أو استثمر أموالك بأمان مع شريك جادّ. النشر <b>مجاني بالكامل</b>.</p>
+      <div class="pi-tags"><span>أفكار مشاريع</span><span>تمويل واستثمار</span><span>أراضٍ وعقارات</span><span>خبرات ومهارات</span></div>
+    </div>
+    <a class="free-ad-cta" style="margin:0 0 16px;background:linear-gradient(135deg,#F6921E,#E07D0A)" onclick="openPartnerModal()">
       <div class="free-ad-cta-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></div>
       <div class="free-ad-cta-text"><strong>اطرح فرصتك أو ابحث عن شريك</strong><span>أرسل التفاصيل وننشرها لك مجاناً</span></div>
       <div class="free-ad-cta-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></div>
@@ -1709,6 +1719,49 @@ function buildPartnerSpecs(l){
   if(l.price>0)       sp+='<div class="det-sp">'+ICON.area+'<div><div class="sp-label">رأس المال التقريبي</div><div class="sp-val">'+fmtPrice(l.price)+'</div></div></div>';
   return sp;
 }
+/* ===== أيقونات المرافق + مساعدات العرض ===== */
+var AIC={
+  sun:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>',
+  elevator:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 8l1.5-2L12 8M12 16l1.5 2 1.5-2"/></svg>',
+  parking:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/></svg>',
+  eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+  drop:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7S5 10 5 15a7 7 0 0 0 14 0c0-5-7-12.3-7-12.3z"/></svg>',
+  wifi:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5a10 10 0 0 1 14 0M8.5 15.8a5 5 0 0 1 7 0"/><circle cx="12" cy="19" r="1"/></svg>',
+  flame:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2s4 4 4 9a4 4 0 0 1-8 0c0-2 1-3 1-3 0 2 1.5 2.5 1.5 2.5S9 8 12 2z"/></svg>',
+  sofa:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3"/><path d="M2 13a2 2 0 0 1 4 0v3h12v-3a2 2 0 0 1 4 0v5H2z"/></svg>',
+  layers:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>',
+  cal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>',
+  gear:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/></svg>',
+  fuel:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22V4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v18"/><path d="M3 12h10"/><path d="M14 8h2a2 2 0 0 1 2 2v6a2 2 0 0 0 4 0v-6l-3-3"/></svg>',
+  gauge:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14l4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>',
+  car:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14M6 17l-1-5 2-5h10l2 5-1 5"/><circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/></svg>',
+  tag:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 12 22l-9-9V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7" cy="7" r="1.2"/></svg>',
+  shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>',
+  cam:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>',
+  screen:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>',
+  door:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22V3a1 1 0 0 1 1-1h11a1 1 0 0 1 1 1v19"/><path d="M2 22h20"/><circle cx="14" cy="12" r="1"/></svg>',
+  file:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
+  zap:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+  road:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22 8 2M20 22 16 2M12 6v2M12 12v2M12 18v2"/></svg>',
+  fence:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V8l3-3 3 3v13M14 21V8l3-3 3 3v13M2 12h20M2 17h20"/></svg>',
+  sign:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M4 6h13l3 3-3 3H4z"/></svg>',
+  wrench:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.3 2.3-2.7-.7-.7-2.7z"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg>',
+  user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+  layout:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>',
+  box:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>',
+  wind:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.6 4.6A2 2 0 1 1 11 8H2M12.6 19.4A2 2 0 1 0 14 16H2M17.7 7.5A2.5 2.5 0 1 1 19.5 12H2"/></svg>',
+  glass:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 12h18M12 3v18"/></svg>'
+};
+function _amSp(ic,label,val){ return val ? '<div class="det-sp">'+ic+'<div><div class="sp-label">'+label+'</div><div class="sp-val">'+esc(String(val))+'</div></div></div>' : ''; }
+function _amBool(ic,label,on){ return on ? '<div class="det-sp">'+ic+'<div><div class="sp-label">'+esc(label)+'</div><div class="sp-val">✓ نعم</div></div></div>' : ''; }
+function aptAmen(l){ return _amSp(AIC.layers,'الطابق',l.aptFloor)+_amSp(AIC.sofa,'الفرش',l.aptFurnished)+_amSp(AIC.flame,'التدفئة',l.aptHeating)+_amSp(AIC.eye,'الإطلالة',l.aptView)+_amSp(AIC.cal,'عمر البناء',l.aptAge?l.aptAge+' سنة':'')+_amBool(AIC.sun,'طاقة شمسية',l.aptSolar)+_amBool(AIC.elevator,'مصعد',l.aptElevator)+_amBool(AIC.parking,'كراج/موقف',l.aptGarage)+_amBool(AIC.drop,'خزان ماء',l.aptWaterTank)+_amBool(AIC.wifi,'إنترنت/ألياف',l.aptInternet); }
+function carAmen(l){ return _amSp(AIC.gear,'ناقل الحركة',l.carGear)+_amSp(AIC.fuel,'الوقود',l.carFuel)+_amSp(AIC.gauge,'سعة المحرك',l.carEngine?l.carEngine+' cc':'')+_amSp(AIC.car,'الدفع',l.carDrive)+_amSp(AIC.tag,'الحالة',l.carCondition)+_amSp(AIC.door,'عدد الأبواب',l.carDoors)+_amBool(AIC.shield,'مدفوعة الجمارك',l.carCustoms)+_amBool(AIC.sun,'فتحة سقف',l.carSunroof)+_amBool(AIC.cam,'كاميرا/حساسات',l.carCamera)+_amBool(AIC.screen,'شاشة/ملاحة',l.carScreen); }
+function landAmen(l){ return _amSp(AIC.file,'نوع الملكية',l.landOwnership)+_amBool(AIC.zap,'كهرباء',l.landElectricity)+_amBool(AIC.drop,'ماء',l.landWater)+_amBool(AIC.wind,'صرف صحي',l.landSewage)+_amBool(AIC.road,'طريق معبّد',l.landRoad)+_amBool(AIC.fence,'مسوّرة',l.landFenced)+_amBool(AIC.shield,'رخصة بناء',l.landPermit)+_amBool(AIC.sign,'واجهة على شارع',l.landStreet); }
+function equipAmen(l){ return _amSp(AIC.wrench,'نوع المعدة',l.equipType)+_amSp(AIC.tag,'الماركة',l.equipBrand)+_amSp(AIC.cal,'سنة الصنع',l.equipYear)+_amSp(AIC.clock,'ساعات التشغيل',l.equipHours?l.equipHours.toLocaleString():'')+_amSp(AIC.shield,'الحالة',l.equipCondition)+_amSp(AIC.fuel,'الوقود',l.equipFuel)+_amSp(AIC.bolt,'الاستطاعة',l.equipPower)+_amBool(AIC.user,'مع مشغّل',l.equipOperator); }
+function shopAmen(l){ return _amSp(AIC.layout,'التجهيز',l.shopFit)+_amBool(AIC.box,'مستودع داخلي',l.shopStorage)+_amBool(AIC.drop,'حمّام',l.shopBathroom)+_amBool(AIC.zap,'كهرباء صناعية',l.shopPower3)+_amBool(AIC.wind,'مكيّف',l.shopAc)+_amBool(AIC.door,'مدخل مستقل',l.shopEntrance)+_amBool(AIC.glass,'واجهة زجاجية',l.shopGlass)+_amBool(AIC.parking,'موقف أمام المحل',l.shopParking); }
+
 function buildDetailSpecs(l,apt){
   if(apt){
     return `
@@ -1718,22 +1771,25 @@ function buildDetailSpecs(l,apt){
       <div class="det-sp">${ICON.living}<div><div class="sp-label">غرف معيشة</div><div class="sp-val">${l.living||'—'}</div></div></div>
       <div class="det-sp">${ICON.balcony}<div><div class="sp-label">شرفات</div><div class="sp-val">${l.balconies||'—'}</div></div></div>
       <div class="det-sp">${ICON.storage}<div><div class="sp-label">غرفة تخزين</div><div class="sp-val">${l.storage?'نعم':'لا'}</div></div></div>
-      <div class="det-sp">${ICON.area}<div><div class="sp-label">المساحة</div><div class="sp-val">${l.area||'—'} م²</div></div></div>`;
+      <div class="det-sp">${ICON.area}<div><div class="sp-label">المساحة</div><div class="sp-val">${l.area||'—'} م²</div></div></div>`
+      + aptAmen(l);
   }else if(isEquip(l.catId)){
-    return '';
+    return equipAmen(l);
   }else if(isShop(l.catId)){
     return `
       <div class="det-sp">${ICON.area}<div><div class="sp-label">المساحة</div><div class="sp-val">${l.shopArea?l.shopArea+' م²':'—'}</div></div></div>
       <div class="det-sp">${ICON.storage}<div><div class="sp-label">الطابق</div><div class="sp-val">${l.shopFloor||'—'}</div></div></div>
       <div class="det-sp">${ICON.model}<div><div class="sp-label">عدد الواجهات</div><div class="sp-val">${l.shopFronts||'—'}</div></div></div>
-      ${l.shopUse?`<div class="det-sp">${ICON.type}<div><div class="sp-label">يصلح لـ</div><div class="sp-val">${esc(l.shopUse)}</div></div></div>`:''}`;
+      ${l.shopUse?`<div class="det-sp">${ICON.type}<div><div class="sp-label">يصلح لـ</div><div class="sp-val">${esc(l.shopUse)}</div></div></div>`:''}`
+      + shopAmen(l);
   }else if(isFarm(l.catId)){
     const isAgri=l.farmType==='أرض زراعية';
     return `
       <div class="det-sp">${ICON.storage}<div><div class="sp-label">نوع الأرض</div><div class="sp-val">${l.farmType||'—'}</div></div></div>
       <div class="det-sp">${ICON.area}<div><div class="sp-label">المساحة</div><div class="sp-val">${l.farmArea?l.farmArea+' م²':'—'}</div></div></div>
       ${l.farmWater?`<div class="det-sp">${ICON.model}<div><div class="sp-label">${isAgri?'مصدر المياه والمرافق':'الخدمات والمرافق'}</div><div class="sp-val">${esc(l.farmWater)}</div></div></div>`:''}
-      ${l.farmTrees?`<div class="det-sp">${isAgri?ICON.tree:ICON.floors}<div><div class="sp-label">${isAgri?'عدد الأشجار':'عدد الطوابق المسموح'}</div><div class="sp-val">${l.farmTrees}</div></div></div>`:''}`;
+      ${l.farmTrees?`<div class="det-sp">${isAgri?ICON.tree:ICON.floors}<div><div class="sp-label">${isAgri?'عدد الأشجار':'عدد الطوابق المسموح'}</div><div class="sp-val">${l.farmTrees}</div></div></div>`:''}`
+      + landAmen(l);
   }else{
     return `
       <div class="det-sp">${ICON.car}<div><div class="sp-label">النوع</div><div class="sp-val">${l.carType||'—'}</div></div></div>
@@ -1741,7 +1797,8 @@ function buildDetailSpecs(l,apt){
       <div class="det-sp">${ICON.type}<div><div class="sp-label">الفئة</div><div class="sp-val">${l.carClass||'—'}</div></div></div>
       <div class="det-sp">${ICON.color}<div><div class="sp-label">اللون</div><div class="sp-val">${l.carColor||'—'}</div></div></div>
       <div class="det-sp">${ICON.year}<div><div class="sp-label">سنة الصنع</div><div class="sp-val">${l.carYear||'—'}</div></div></div>
-      ${isRent(l.catId)?'':`<div class="det-sp">${ICON.km}<div><div class="sp-label">المسافة</div><div class="sp-val">${l.carKm?l.carKm.toLocaleString()+' كم':'—'}</div></div></div>`}`;
+      ${isRent(l.catId)?'':`<div class="det-sp">${ICON.km}<div><div class="sp-label">المسافة</div><div class="sp-val">${l.carKm?l.carKm.toLocaleString()+' كم':'—'}</div></div></div>`}`
+      + carAmen(l);
   }
 }
 
@@ -2693,6 +2750,9 @@ function sellCityChange(){
 }
 function _sf(id,label,attrs){ return `<div class="sell-field"><label>${label}</label><input id="${id}" ${attrs||''}></div>`; }
 function _ssel(id,label,opts){ return `<div class="sell-field"><label>${label}</label><select id="${id}">${opts.map(o=>`<option>${o}</option>`).join('')}</select></div>`; }
+function _ssel0(id,label,opts){ return `<div class="sell-field"><label>${label}</label><select id="${id}"><option value="">—</option>${opts.map(o=>`<option>${o}</option>`).join('')}</select></div>`; }
+function _sck(id,label){ return `<label class="sell-chk"><input type="checkbox" id="${id}"><span>${label}</span></label>`; }
+function _sckRow(title,html){ return `<div class="sell-field" style="grid-column:1/-1"><label>${title}</label><div class="sell-chk-grid">${html}</div></div>`; }
 function renderSellFields(){
   const c = getCat(document.getElementById('sellCat').value), t = c?c.type:'';
   let h='';
@@ -2703,26 +2763,54 @@ function renderSellFields(){
       + _sf('sellKitchens','المطابخ','type="number" min="0" value="1"')
       + _sf('sellBalconies','الشرفات','type="number" min="0" value="0"')
       + _sf('sellLiving','غرف المعيشة','type="number" min="0" value="1"')
-      + _sf('sellStorage','المستودعات','type="number" min="0" value="0"');
+      + _sf('sellStorage','المستودعات','type="number" min="0" value="0"')
+      + _sf('sellAptFloor','الطابق','type="text" placeholder="مثال: الثالث"')
+      + _ssel0('sellAptFurnished','الفرش',['مفروش','غير مفروش','نصف مفروش'])
+      + _ssel0('sellAptHeating','التدفئة',['مركزية','مازوت','كهرباء','غاز','لا يوجد'])
+      + _ssel0('sellAptView','الإطلالة',['بحرية','جبلية','شارع رئيسي','عادية'])
+      + _sf('sellAptAge','عمر البناء (سنوات)','type="number" min="0"')
+      + _sckRow('مرافق إضافية', _sck('sellAptSolar','طاقة شمسية')+_sck('sellAptElevator','مصعد')+_sck('sellAptGarage','كراج/موقف')+_sck('sellAptWaterTank','خزان ماء')+_sck('sellAptInternet','إنترنت/ألياف'));
   } else if(t==='car'){
     h = _ssel('sellCarBrand','الماركة',SELL_CAR_BRANDS)
       + _sf('sellCarModel','الموديل','type="text" placeholder="مثال: كامري"')
       + _sf('sellCarYear','سنة الصنع','type="number" min="1990" max="2026" value="2020"')
       + _sf('sellCarKm','المسافة (كم)','type="number" min="0"')
       + _sf('sellCarColor','اللون','type="text" placeholder="أبيض"')
-      + _ssel('sellCarClass','الفئة',SELL_CAR_CLASSES);
+      + _ssel('sellCarClass','الفئة',SELL_CAR_CLASSES)
+      + _ssel0('sellCarGear','ناقل الحركة',['أوتوماتيك','عادي'])
+      + _ssel0('sellCarFuel','الوقود',['بنزين','ديزل','غاز','هجين','كهرباء'])
+      + _sf('sellCarEngine','سعة المحرك (cc)','type="text" placeholder="مثال: 1600"')
+      + _ssel0('sellCarDrive','الدفع',['أمامي','خلفي','رباعي 4×4'])
+      + _ssel0('sellCarCondition','الحالة',['جديدة','مستعملة'])
+      + _sf('sellCarDoors','عدد الأبواب','type="number" min="0"')
+      + _sckRow('مزايا إضافية', _sck('sellCarCustoms','مدفوعة الجمارك')+_sck('sellCarSunroof','فتحة سقف')+_sck('sellCarCamera','كاميرا/حساسات')+_sck('sellCarScreen','شاشة/ملاحة'));
   } else if(t==='shop'){
     h = _sf('sellShopArea','المساحة م²','type="number" min="0"')
       + _sf('sellShopFloor','الطابق','type="text" placeholder="أرضي / أول"')
       + _sf('sellShopFronts','عدد الواجهات','type="number" min="0"')
-      + _sf('sellShopUse','يصلح لـ (اختياري)','type="text" placeholder="مطعم، مكتب..."');
+      + _sf('sellShopUse','يصلح لـ (اختياري)','type="text" placeholder="مطعم، مكتب..."')
+      + _ssel0('sellShopFit','التجهيز',['جاهز/ديكور كامل','على العظم','نصف تجهيز'])
+      + _sckRow('مرافق المحل', _sck('sellShopStorage','مستودع')+_sck('sellShopBathroom','حمّام')+_sck('sellShopPower3','كهرباء صناعية')+_sck('sellShopAc','مكيّف')+_sck('sellShopEntrance','مدخل مستقل')+_sck('sellShopGlass','واجهة زجاجية')+_sck('sellShopParking','موقف'));
   } else if(t==='farm'){
     h = _ssel('sellFarmType','نوع الأرض',SELL_LAND_TYPES)
       + _sf('sellFarmArea','المساحة م²','type="number" min="0"')
       + _sf('sellFarmServices','الخدمات والمرافق','type="text" placeholder="كهرباء، ماء، طريق..."')
-      + _sf('sellFarmNum','عدد الأشجار / الطوابق (اختياري)','type="number" min="0"');
+      + _sf('sellFarmNum','عدد الأشجار / الطوابق (اختياري)','type="number" min="0"')
+      + _ssel0('sellLandOwnership','نوع الملكية',['طابو أخضر','أميري','حكم محكمة','كاتب عدل'])
+      + _sckRow('الخدمات والمرافق', _sck('sellLandElectricity','كهرباء')+_sck('sellLandWater','ماء')+_sck('sellLandSewage','صرف صحي')+_sck('sellLandRoad','طريق معبّد')+_sck('sellLandFenced','مسوّرة')+_sck('sellLandPermit','رخصة بناء')+_sck('sellLandStreet','واجهة على شارع'));
+  } else if(t==='equipment'){
+    h = _ssel0('sellEquipType','نوع المعدة',['حفّار','رافعة','جرافة','مولّدة كهرباء','ضاغط هواء','رافعة شوكية','خلّاطة باطون','مضخّة','أخرى'])
+      + _sf('sellEquipBrand','الماركة','type="text" placeholder="مثال: كاتربيلر"')
+      + _sf('sellEquipYear','سنة الصنع','type="number" min="1980" max="2026"')
+      + _sf('sellEquipHours','ساعات التشغيل','type="number" min="0"')
+      + _ssel0('sellEquipCondition','الحالة',['جديدة','مستعملة'])
+      + _ssel0('sellEquipFuel','الوقود',['ديزل','بنزين','كهرباء'])
+      + _sf('sellEquipPower','الاستطاعة','type="text" placeholder="مثال: 120 حصان"')
+      + _sckRow('خيارات', _sck('sellEquipOperator','مع مشغّل/سائق'));
   }
   document.getElementById('sellCatFields').innerHTML = h;
+  var _dh={apartment:'مثال: يوجد أثاث كامل، قريبة من المدارس والخدمات، جاهزة للسكن، إطلالة مميّزة...',car:'مثال: بحالة ممتازة، صيانة دورية بالوكالة، بلا حوادث، فحص كامل...',shop:'مثال: موقع حيوي وحركة عالية، مناسب لعدّة أنشطة، عقد إيجار مرن...',farm:'مثال: على طريق رئيسي، قريبة من الخدمات، صالحة للبناء أو الاستثمار...',equipment:'مثال: جاهزة للعمل فوراً، صيانة حديثة، مع ملحقاتها، بحالة ممتازة...'};
+  var _dd=document.getElementById('sellDesc'); if(_dd) _dd.placeholder=_dh[t]||'تفاصيل إضافية...';
   renderSellTerms();
 }
 function _sv(id){ const e=document.getElementById(id); return e?String(e.value).trim():''; }
@@ -2738,10 +2826,12 @@ function submitSell(){
   if(hood) lines.push('الحي: '+hood);
   lines.push('السعر: '+price+' ل.س');
   const t=c.type, add=(lbl,id)=>{ const x=_sv(id); if(x) lines.push(lbl+': '+x); };
-  if(t==='apartment'){ add('غرف النوم','sellRooms'); add('الحمامات','sellBaths'); add('المساحة م²','sellArea'); add('المطابخ','sellKitchens'); add('الشرفات','sellBalconies'); add('غرف المعيشة','sellLiving'); add('المستودعات','sellStorage'); }
-  else if(t==='car'){ add('الماركة','sellCarBrand'); add('الموديل','sellCarModel'); add('سنة الصنع','sellCarYear'); add('المسافة كم','sellCarKm'); add('اللون','sellCarColor'); add('الفئة','sellCarClass'); }
-  else if(t==='shop'){ add('المساحة م²','sellShopArea'); add('الطابق','sellShopFloor'); add('عدد الواجهات','sellShopFronts'); add('يصلح لـ','sellShopUse'); }
-  else if(t==='farm'){ add('نوع الأرض','sellFarmType'); add('المساحة م²','sellFarmArea'); add('الخدمات','sellFarmServices'); add('عدد الأشجار/الطوابق','sellFarmNum'); }
+  const chk=(lbl,id)=>{ if(document.getElementById(id)?.checked) lines.push(lbl+': نعم'); };
+  if(t==='apartment'){ add('غرف النوم','sellRooms'); add('الحمامات','sellBaths'); add('المساحة م²','sellArea'); add('المطابخ','sellKitchens'); add('الشرفات','sellBalconies'); add('غرف المعيشة','sellLiving'); add('المستودعات','sellStorage'); add('الطابق','sellAptFloor'); add('الفرش','sellAptFurnished'); add('التدفئة','sellAptHeating'); add('الإطلالة','sellAptView'); add('عمر البناء','sellAptAge'); chk('طاقة شمسية','sellAptSolar'); chk('مصعد','sellAptElevator'); chk('كراج/موقف','sellAptGarage'); chk('خزان ماء','sellAptWaterTank'); chk('إنترنت/ألياف','sellAptInternet'); }
+  else if(t==='car'){ add('الماركة','sellCarBrand'); add('الموديل','sellCarModel'); add('سنة الصنع','sellCarYear'); add('المسافة كم','sellCarKm'); add('اللون','sellCarColor'); add('الفئة','sellCarClass'); add('ناقل الحركة','sellCarGear'); add('الوقود','sellCarFuel'); add('سعة المحرك','sellCarEngine'); add('الدفع','sellCarDrive'); add('الحالة','sellCarCondition'); add('عدد الأبواب','sellCarDoors'); chk('مدفوعة الجمارك','sellCarCustoms'); chk('فتحة سقف','sellCarSunroof'); chk('كاميرا/حساسات','sellCarCamera'); chk('شاشة/ملاحة','sellCarScreen'); }
+  else if(t==='shop'){ add('المساحة م²','sellShopArea'); add('الطابق','sellShopFloor'); add('عدد الواجهات','sellShopFronts'); add('يصلح لـ','sellShopUse'); add('التجهيز','sellShopFit'); chk('مستودع','sellShopStorage'); chk('حمّام','sellShopBathroom'); chk('كهرباء صناعية','sellShopPower3'); chk('مكيّف','sellShopAc'); chk('مدخل مستقل','sellShopEntrance'); chk('واجهة زجاجية','sellShopGlass'); chk('موقف','sellShopParking'); }
+  else if(t==='farm'){ add('نوع الأرض','sellFarmType'); add('المساحة م²','sellFarmArea'); add('الخدمات','sellFarmServices'); add('عدد الأشجار/الطوابق','sellFarmNum'); add('نوع الملكية','sellLandOwnership'); chk('كهرباء','sellLandElectricity'); chk('ماء','sellLandWater'); chk('صرف صحي','sellLandSewage'); chk('طريق معبّد','sellLandRoad'); chk('مسوّرة','sellLandFenced'); chk('رخصة بناء','sellLandPermit'); chk('واجهة على شارع','sellLandStreet'); }
+  else if(t==='equipment'){ add('نوع المعدة','sellEquipType'); add('الماركة','sellEquipBrand'); add('سنة الصنع','sellEquipYear'); add('ساعات التشغيل','sellEquipHours'); add('الحالة','sellEquipCondition'); add('الوقود','sellEquipFuel'); add('الاستطاعة','sellEquipPower'); chk('مع مشغّل','sellEquipOperator'); }
   const desc=_sv('sellDesc'); if(desc) lines.push('الوصف: '+desc);
   lines.push('—','الاسم: '+name,'واتساب: '+phone);
   window.open('https://wa.me/963983127483?text='+encodeURIComponent(lines.join('\n')),'_blank');
