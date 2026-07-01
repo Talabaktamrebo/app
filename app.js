@@ -3135,36 +3135,30 @@ document.addEventListener('keydown',function(e){
   if(e.key==='ArrowRight')lbNav(-1);
 });
 
-/* ===== قفل تمرير الخلفية عند فتح أي نافذة/أوفرلاي ===== */
+/* ===== قفل تمرير الخلفية عند فتح نافذة فعليّة (حالة .show/.open الصريحة فقط) ===== */
 (function(){
-  // أي عنصر أوفرلاي/نافذة (نطابق بالاسم ثم نتأكّد أنه ظاهر فعلاً على الشاشة)
-  var SEL = '[class*="overlay"],[class*="Overlay"],[id*="Overlay"],.pub-terms-ov,.u-ov,.ac-chat,.ac-terms-ov,.ac-spin-ov,.filter-sheet,#lightbox';
-  function shown(el){
-    if(!el) return false;
-    var cs=getComputedStyle(el);
-    if(cs.display==='none'||cs.visibility==='hidden'||parseFloat(cs.opacity||'1')===0) return false;
-    if(cs.pointerEvents==='none' && parseFloat(cs.opacity||'1')<0.05) return false;
-    var r=el.getBoundingClientRect();
-    if(r.width<=1||r.height<=1) return false;
-    // متقاطع مع الشاشة فعلاً (يستبعد المنزلق خارجها بالـ transform)
-    return r.bottom>4 && r.top<innerHeight-4 && r.right>4 && r.left<innerWidth-4;
-  }
+  // عناصر النوافذ (للمراقبة) — الصفحات ليست منها
+  var WATCH = '.ac-overlay,.ac-chat,.ac-spin-ov,.ac-terms-ov,.sell-modal-overlay,.free-ad-modal-overlay,.allcats-overlay,.pub-terms-ov,.u-ov,.filter-sheet,.filter-overlay,.menu-overlay,#lightbox,#bkOverlay,#bookConfirmOverlay';
+  // مفتوحة فعلاً فقط عند وجود صنف الحالة الصريح
+  var OPEN = '.ac-overlay.show,.ac-chat.show,.ac-spin-ov.show,.ac-terms-ov.show,.sell-modal-overlay.show,.free-ad-modal-overlay.show,.allcats-overlay.show,.pub-terms-ov.show,.u-ov.show,#bkOverlay.show,.filter-sheet.open,.menu-overlay.open';
+  function dispShown(id){ var el=document.getElementById(id); if(!el) return false; var cs=getComputedStyle(el); return cs.display!=='none' && cs.visibility!=='hidden'; }
   function anyOpen(){
-    var els=document.querySelectorAll(SEL);
-    for(var i=0;i<els.length;i++){ if(shown(els[i])) return true; }
+    if(document.querySelector(OPEN)) return true;   // نوافذ ذات صنف حالة
+    if(dispShown('lightbox')) return true;           // معرض الصور (يُظهر بالـ display)
+    if(dispShown('bookConfirmOverlay')) return true; // تأكيد الحجز (يُنشأ ديناميكياً)
     return false;
   }
   var _raf=null;
   function evaluate(){ _raf=null; document.documentElement.classList.toggle('scroll-lock', anyOpen()); }
   function schedule(){ if(_raf) return; _raf=requestAnimationFrame(evaluate); }
+  function hits(n){ return n && n.nodeType===1 && ((n.matches&&n.matches(WATCH))||(n.querySelector&&n.querySelector(WATCH))); }
   function relevant(muts){
     for(var i=0;i<muts.length;i++){
       var m=muts[i], t=m.target;
-      if(t && t.nodeType===1 && t.matches && t.matches(SEL)) return true;   // تغيّر صنف/ستايل أوفرلاي
-      var an=m.addedNodes||[];
-      for(var j=0;j<an.length;j++){ var n=an[j];
-        if(n.nodeType===1 && ((n.matches&&n.matches(SEL))||(n.querySelector&&n.querySelector(SEL)))) return true; // أوفرلاي جديد
-      }
+      if(t && t.nodeType===1 && t.matches && t.matches(WATCH)) return true;  // تغيّر صنف/ستايل نافذة
+      var an=m.addedNodes||[], rn=m.removedNodes||[], j;
+      for(j=0;j<an.length;j++){ if(hits(an[j])) return true; }              // نافذة أُضيفت
+      for(j=0;j<rn.length;j++){ if(hits(rn[j])) return true; }              // نافذة أُزيلت (يمنع بقاء القفل عالقاً)
     }
     return false;
   }
